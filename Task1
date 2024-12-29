@@ -1,0 +1,48 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the dataset
+data = pd.read_csv(r'C:\Users\HP\Downloads\database-supermarket-sales-csv.zip')  # Ensure the file path is correct
+
+# Display basic information about the dataset
+print(data.head())
+print(data.shape)
+print(data.describe())
+print(data.info())
+
+# Check for missing values
+print("Missing values per column:")
+print(data.isnull().sum())
+
+# Handle missing values (if any)
+data = data.fillna(method='ffill')  # Forward fill missing values
+
+# List all column names to check available options
+print("Column Names:", data.columns)
+
+# Replace 'column_name' with a valid numeric column from your dataset (e.g., 'Total', 'Unit price', 'Quantity')
+numeric_column = 'Total'  # Change this to the column you want to visualize
+
+# Plot a histogram
+data[numeric_column].hist(bins=30, edgecolor='black')
+plt.title(f'Histogram of {numeric_column}')
+plt.xlabel(numeric_column)
+plt.ylabel('Frequency')
+plt.show()
+
+# Plot a heatmap of correlations (only for numeric columns)
+plt.figure(figsize=(10, 8))
+
+# Select only numeric columns for correlation
+numeric_data = data.select_dtypes(include=[float, int])
+
+# Generate correlation heatmap
+sns.heatmap(numeric_data.corr(), annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Heatmap')
+plt.show()
+
+# Plot a boxplot
+sns.boxplot(x=data[numeric_column])
+plt.title(f'Boxplot of {numeric_column}')
+plt.show()
